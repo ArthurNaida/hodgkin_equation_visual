@@ -1,0 +1,7 @@
+#!/bin/bash
+if [ "$1" == "run" ]; then
+    shift
+    dotnet run -- "$@"
+else
+    echo "Unknown command. Use: ./equation run [--no-input]"
+fi
