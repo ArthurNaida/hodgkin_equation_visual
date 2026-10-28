@@ -13,7 +13,6 @@ public class Membrane
         Center = center;
     }
 
-    // Принимаем текущие радиусы пульсирующей сомы
     public void Draw(float radiusX, float radiusY) 
     {
         for (int i = 0; i < 4; i++) 

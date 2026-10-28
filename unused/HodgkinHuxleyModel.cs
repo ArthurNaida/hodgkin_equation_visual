@@ -2,10 +2,8 @@ using System;
 
 public static class HodgkinHuxleyModel 
 {
-    // Helper method to compute derivatives (rates of change) for any given state and current
     public static (double dVdt, double dMdt, double dHdt, double dNdt) ComputeDerivatives(Neuron n, HodgkinHuxleyParameters p, double I_ext) 
     {
-        // Kinetic rate functions (alpha and beta)
         double alphaM = 0.1 * (n.V + 40.0) / (1.0 - Math.Exp(-(n.V + 40.0) / 10.0));
         double betaM  = 4.0 * Math.Exp(-(n.V + 65.0) / 18.0);
 
@@ -15,12 +13,10 @@ public static class HodgkinHuxleyModel
         double alphaN = 0.01 * (n.V + 55.0) / (1.0 - Math.Exp(-(n.V + 55.0) / 10.0));
         double betaN  = 0.125 * Math.Exp(-(n.V + 65.0) / 80.0);
 
-        // Ionic currents calculation
         double iNa = p.GNa * Math.Pow(n.M, 3) * n.H * (n.V - p.ENa);
         double iK  = p.GK  * Math.Pow(n.N, 4) * (n.V - p.EK);
         double iL  = p.GL  * (n.V - p.EL);
 
-        // Derivatives calculation (rates of change)
         double dVdt = (I_ext - iNa - iK - iL) / p.Cm;
         double dMdt = alphaM * (1.0 - n.M) - betaM * n.M;
         double dHdt = alphaH * (1.0 - n.H) - betaH * n.H;
@@ -29,7 +25,6 @@ public static class HodgkinHuxleyModel
         return (dVdt, dMdt, dHdt, dNdt);
     }
 
-    // Performs a single Runge-Kutta 4th order integration step
     public static Neuron StepRK4(Neuron neuron, HodgkinHuxleyParameters p, double I_ext, double dt) 
     {
         var (k1_V, k1_M, k1_H, k1_N) = ComputeDerivatives(neuron, p, I_ext);

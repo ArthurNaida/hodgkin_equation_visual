@@ -21,7 +21,6 @@ public class EllipsePulseDynamics
 
     public void Update(float time)
     {
-        // Плавная органическая пульсация сомы
         RadiusX = baseRadiusX + MathF.Sin(time * 1.5f) * 6f + MathF.Cos(time * 0.8f) * 3f;
         RadiusY = baseRadiusY + MathF.Cos(time * 1.3f) * 6f + MathF.Sin(time * 0.9f) * 3f;
     }

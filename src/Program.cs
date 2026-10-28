@@ -4,6 +4,7 @@ using System.Numerics;
 using Raylib_cs;
 using NeuroSimulation.Models;
 using NeuroSimulation.Utilities;
+using NeuroSimulation.Behaviors;
 
 namespace NeuroSimulation;
 
@@ -31,6 +32,7 @@ class Program
         }
 
         var axon = NeuronUtils.GenerateRandomAxon(0.0f);
+        var viewController = new InteractiveViewController();
 
         Camera2D camera = new Camera2D();
         camera.Target = somaCenter;
@@ -47,22 +49,12 @@ class Program
             simTime += dt;
             soma.Update(simTime);
 
-            float wheel = Raylib.GetMouseWheelMove();
-            if (wheel != 0.0f) 
-            {
-                camera.Zoom += wheel * 0.1f;
-                if (camera.Zoom < 0.2f) camera.Zoom = 0.2f;
-                if (camera.Zoom > 5.0f) camera.Zoom = 5.0f;
-            }
-
-            if (Raylib.IsMouseButtonDown(MouseButton.Left) || Raylib.IsMouseButtonDown(MouseButton.Middle)) 
-            {
-                Vector2 delta = Raylib.GetMouseDelta();
-                camera.Target -= delta / camera.Zoom;
-            }
+            viewController.ZoomCanvas(ref camera);
+            viewController.MoveCanvas(ref camera);
 
             Raylib.BeginDrawing();
             Raylib.ClearBackground(darkPurpleBg);
+            
             Raylib.BeginMode2D(camera);
 
             foreach (var d in dendritesList) 
@@ -73,9 +65,13 @@ class Program
             soma.Draw(simTime);
             membrane.Draw(soma.RadiusX, soma.RadiusY);
 
+            Vector2 axonTipPos = somaCenter + new Vector2(300, 0); 
+
+            viewController.ShowWorldLabels(somaCenter, axonTipPos, dendritesList.Count);
+
             Raylib.EndMode2D();
 
-            Raylib.DrawText("Controls: Drag LKM/Middle Mouse to Move | Wheel to Zoom", 20, 20, 16, new Color(200, 170, 220, 255));
+            viewController.ShowControlsHint();
 
             Raylib.EndDrawing();
         }
