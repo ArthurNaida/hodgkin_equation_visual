@@ -20,9 +20,20 @@ public class SimulationLogger
         {
             logMessages.Dequeue();
         }
+
         logMessages.Enqueue(logEntry);
-        
         allLogsHistory.Add($"t: {time:F2}s | V: {vText} mV | Status: {phaseDescription}");
+    }
+
+    public void AddMessage(string message)
+    {
+        if (logMessages.Count >= MaxLines) 
+        {
+            logMessages.Dequeue();
+        }
+
+        logMessages.Enqueue(message);
+        allLogsHistory.Add(message);
     }
 
     public void ExportToFile(string filePath = "simulation_export.txt") 

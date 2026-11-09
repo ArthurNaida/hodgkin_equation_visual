@@ -40,6 +40,7 @@ class Program
 
         var p = new HodgkinHuxleyParameters();
         var neuron = new Neuron(-65.0, 0.05, 0.6, 0.32);
+        var electrode = new Electrode(somaCenter, soma.RadiusX, soma.RadiusY, appliedCurrent: 25.0f);
 
         float visualTime = 0.0f;
 
@@ -58,31 +59,33 @@ class Program
 
         simulationLogger.AddLog(simTime, neuron.V);
 
+        double externalCurrent = 20.0;
+        double currentDt = 0.01; // Шаг солвера из HUD (от 0.01 до 0.10)
+        bool wasStimulating = false;
+
         while (!Raylib.WindowShouldClose()) 
         {
             float frameDt = Raylib.GetFrameTime();
 
             visualTime += frameDt;
-            soma.Update(visualTime);
+            soma.Update(visualTime, neuron.V);
 
-            double currentExternalCurrent = 20.0;
-            double currentDt = 0.01; // Шаг солвера из HUD (от 0.01 до 0.10)
             bool exportClicked = false;
-
-            physicsSettingsHud.Draw(screenWidth, ref p, ref currentExternalCurrent, ref currentDt, out exportClicked);
-
+            physicsSettingsHud.Draw(screenWidth, ref p, ref externalCurrent, ref currentDt, out exportClicked);
             if (exportClicked || Raylib.IsKeyPressed(KeyboardKey.F5)) 
             {
                 simulationLogger.ExportToFile("simulation_export.txt");
                 Console.WriteLine("[Export] Logs successfully saved to simulation_export.txt");
             }
+            
+            bool isStimulating = electrode.Update(soma.Center, soma.RadiusX, soma.RadiusY, camera);
+            double iExt = (isStimulating || simTime < 3) ? externalCurrent : 0.0; // check simTime for auto stimulating by IExt when launch
 
             logTimer += frameDt;
             if (logTimer >= logInterval) 
             {
                 logTimer -= logInterval;
                 simTime += currentDt;
-                double iExt = (simTime >= 1.0 && simTime <= 3.0) ? currentExternalCurrent : 0.0;
 
                 var nextNeuron = HodgkinHuxleyModel.StepRK4(neuron, p, iExt, currentDt);
                 if (!double.IsNaN(nextNeuron.V) && !double.IsInfinity(nextNeuron.V)) 
@@ -91,12 +94,17 @@ class Program
                 }
 
                 simulationLogger.AddLog(simTime, neuron.V);
+
+                if (isStimulating && !wasStimulating)
+                {
+                    simulationLogger.AddMessage($"[Stimulation] Electrode triggered at t = {simTime:F2}s with current = {externalCurrent} uA");
+                }
+                wasStimulating = isStimulating;
             }
 
             viewController.ZoomCanvas(ref camera);
             viewController.MoveCanvas(ref camera);
 
-            // --- DRAW PHASE ---
             Raylib.BeginDrawing();
             Raylib.ClearBackground(darkPurpleBg);
             
@@ -109,6 +117,7 @@ class Program
             axon.Draw(soma.Center, soma.RadiusX, soma.RadiusY);
             soma.Draw(visualTime);
             membrane.Draw(soma.RadiusX, soma.RadiusY);
+            electrode.DrawWorld();
 
             Vector2 axonTipPos = somaCenter + new Vector2(300, 0); 
             viewController.ShowWorldLabels(somaCenter, axonTipPos, dendritesList.Count);
@@ -116,6 +125,7 @@ class Program
             Raylib.EndMode2D();
 
             viewController.ShowControlsHint();
+            electrode.DrawUI();
             LogUtils.DrawLogWindow(screenWidth, simulationLogger);
 
             Raylib.EndDrawing();
