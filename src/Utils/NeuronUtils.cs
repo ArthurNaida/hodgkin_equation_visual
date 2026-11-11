@@ -1,7 +1,7 @@
 using System;
 using NeuroSimulation.Models;
 
-namespace NeuroSimulation.Utilities;
+namespace NeuroSimulation.Utils;
 
 public static class NeuronUtils 
 {

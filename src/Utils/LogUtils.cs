@@ -2,7 +2,7 @@ using Raylib_cs;
 using NeuroSimulation.Behaviors;
 using NeuroSimulation.UI;
 
-namespace NeuroSimulation.Utilities;
+namespace NeuroSimulation.Utils;
 
 public static class LogUtils 
 {
