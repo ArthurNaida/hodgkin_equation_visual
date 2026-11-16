@@ -20,7 +20,6 @@ public class UISlider
 
     public float Draw(int x, int y, int width, int height) 
     {
-        // ИЗМЕНЕНИЕ: Формат F2 вместо F1 для точного отображения сотых долей (0.01, 0.02 и т.д.)
         Raylib.DrawText($"{label}: {currentValue:F2}", x, y, 12, new Color(210, 190, 230, 255));
 
         int sliderY = y + 18;

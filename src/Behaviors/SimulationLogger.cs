@@ -7,10 +7,16 @@ public class SimulationLogger
 {
     private readonly Queue<string> logMessages = new Queue<string>();
     private readonly List<string> allLogsHistory = new List<string>();
+    private readonly List<(double Time, double Voltage)> history = new();
     private const int MaxLines = 7;
+
+    public IReadOnlyList<(double Time, double Voltage)> History => history;
+    public IReadOnlyList<(double Time, double Voltage)> GetHistory() => history;
 
     public void AddLog(double time, double voltage) 
     {
+        history.Add((time, voltage));
+
         string phaseDescription = GetVoltageDescription(voltage);
         string vText = (double.IsNaN(voltage) || double.IsInfinity(voltage)) ? "NaN" : voltage.ToString("F3");
 

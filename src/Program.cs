@@ -16,10 +16,7 @@ class Program
         {
             float frameDt = Raylib.GetFrameTime();
 
-            // Шаг логики и физики
             Visual.Update(context, frameDt);
-
-            // Шаг отрисовки
             Renderer.Draw(context);
         }
 

@@ -1,6 +1,7 @@
 using System.Numerics;
 using Raylib_cs;
 using NeuroSimulation.Utils;
+using NeuroSimulation.UI;
 
 namespace NeuroSimulation.Simulation;
 
@@ -30,6 +31,7 @@ public static class Renderer
         ctx.ViewController.ShowControlsHint();
         ctx.Electrode.DrawUI();
         LogUtils.DrawLogWindow(Context.ScreenWidth, ctx.SimulationLogger);
+        OscilloscopeGraph.Draw(Context.ScreenHeight, ctx.SimulationLogger);
 
         Raylib.EndDrawing();
     }

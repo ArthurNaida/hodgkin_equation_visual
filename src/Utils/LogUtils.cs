@@ -13,7 +13,6 @@ public static class LogUtils
         int boxX = screenWidth - boxWidth - 20;
         int boxY = 20;
 
-        // Рисуем модальное окно через дизайн-систему UIWindow
         UIWindow.Draw(boxX, boxY, boxWidth, boxHeight, "HODGKIN-HUXLEY LIVE LOGS");
 
         int textY = boxY + 42;

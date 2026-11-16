@@ -8,8 +8,6 @@ public class PhysicsSettingsHud
     private readonly UISlider gNaSlider = new UISlider("Max Na Conductance (GNa)", 0f, 240f, 120.0f);
     private readonly UISlider gKSlider = new UISlider("Max K Conductance (GK)", 0f, 100f, 36.0f);
     private readonly UISlider iExtSlider = new UISlider("External Current (I_ext)", 0f, 50f, 20.0f);
-    
-    // Академический диапазон dt: от 0.01 до 0.10 с дефолтом 0.01
     private readonly UISlider dtSlider = new UISlider("Integration Step (dt)", 0.01f, 0.10f, 0.01f);
     
     private readonly UIButton exportButton = new UIButton("Export Logs to File");

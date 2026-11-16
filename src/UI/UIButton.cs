@@ -20,7 +20,6 @@ public class UIButton
         bool isHovered = Raylib.CheckCollisionPointRec(mousePos, bounds);
         bool isClicked = isHovered && Raylib.IsMouseButtonPressed(MouseButton.Left);
 
-        // Цветовая схема кнопки в стиле дизайн-системы
         Color bgColor = isHovered ? newCalculatorColor(100, 70, 150, 255) : new Color(60, 40, 90, 255);
         Color borderColor = new Color(150, 110, 200, 255);
         Color textColor = new Color(255, 240, 200, 255);
@@ -28,7 +27,6 @@ public class UIButton
         Raylib.DrawRectangleRec(bounds, bgColor);
         Raylib.DrawRectangleLinesEx(bounds, 1, borderColor);
 
-        // Центрируем текст внутри кнопки
         int fontSize = 12;
         int textWidth = Raylib.MeasureText(label, fontSize);
         int textX = x + (width - textWidth) / 2;

@@ -29,8 +29,6 @@ public static class HodgkinHuxleyModel
 
     public static Neuron StepRK4(Neuron neuron, HodgkinHuxleyParameters p, double I_ext, double dt) 
     {
-        // Адаптивное внутреннее дробление шага: 
-        // независимо от внешнего dt, расчет дробится на микро-шаги для абсолютной математической стабильности физики
         int subSteps = dt > 0.02 ? 4 : 1;
         double subDt = dt / subSteps;
 
@@ -69,7 +67,6 @@ public static class HodgkinHuxleyModel
             double newH = currentN.H + (subDt / 6.0) * (k1_H + 2.0 * k2_H + 2.0 * k3_H + k4_H);
             double newN = currentN.N + (subDt / 6.0) * (k1_N + 2.0 * k2_N + 2.0 * k3_N + k4_N);
 
-            // Безопасный контроль пределов без искусственного ограничения истинного пика потенциала действия
             if (double.IsNaN(newV) || double.IsInfinity(newV)) 
             {
                 newV = -65.0;

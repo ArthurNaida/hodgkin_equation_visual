@@ -7,8 +7,8 @@ namespace NeuroSimulation.Models;
 
 public class Electrode 
 {
-    public Vector2 TipPosition; // Кончик электрода (прикоснут к соме)
-    public Vector2 BasePosition; // Задняя часть электрода
+    public Vector2 TipPosition;
+    public Vector2 BasePosition;
     public bool IsStimulating { get; private set; }
 
     private readonly UIButton stimulateButton;
